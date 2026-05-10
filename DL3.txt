@@ -1,0 +1,37 @@
+# Fashion MNIST Classification using CNN
+
+from tensorflow.keras.datasets import fashion_mnist
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Conv2D, Flatten, MaxPooling2D
+
+# Load Dataset
+(Xtrain, Ytrain), (Xtest, Ytest) = fashion_mnist.load_data()
+
+# Reshape Data
+Xtrain = Xtrain.reshape(60000,28,28,1)
+Xtest = Xtest.reshape(10000,28,28,1)
+
+# Create Model
+model = Sequential()
+
+model.add(Conv2D(32,(3,3),activation='relu',input_shape=(28,28,1)))
+model.add(MaxPooling2D((2,2)))
+
+model.add(Flatten())
+
+model.add(Dense(64,activation='relu'))
+model.add(Dense(10,activation='softmax'))
+
+# Compile Model
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# Train Model
+model.fit(Xtrain,Ytrain,epochs=5)
+
+# Prediction
+prediction = model.predict(Xtest)
+
+print("Predicted Class:", prediction[0])
+print("Actual Class:", Ytest[0])
